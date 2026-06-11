@@ -1,368 +1,674 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Janki Kanzariya | Ocean Dynamics Researcher</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital@0;1&display=swap" rel="stylesheet"/>
+  <title>Janki Kanzariya · Ocean Dynamics Researcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ocean: #0F6E56;
-      --ocean-light: #E1F5EE;
-      --ocean-mid: #1D9E75;
-      --text: #1a1a1a;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --bg: #ffffff;
-      --bg2: #f9fafb;
+      --deep:    #020d18;
+      --abyss:   #04182a;
+      --mid:     #0a3048;
+      --surface: #0d4a6e;
+      --foam:    #5ba8c4;
+      --ice:     #a8dce8;
+      --pale:    #dff2f7;
+      --white:   #f4fbfd;
+      --gold:    #e8c96a;
+      --muted:   rgba(168,220,232,0.55);
+      --border:  rgba(168,220,232,0.15);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      background: var(--deep);
+      color: var(--pale);
       font-size: 15px;
       line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    /* NAV */
+    /* ── OCEAN CANVAS ── */
+    #ocean-canvas {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none;
+      opacity: 0.45;
+    }
+
+    /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
-      height: 56px;
+      padding: 0 2.5rem; height: 58px;
+      background: rgba(2,13,24,0.75);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
     }
-    .nav-logo { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); text-decoration: none; }
-    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
-    .nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; font-weight: 400; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--ocean); }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-style: italic;
+      color: var(--ice); text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ice); }
 
-    /* SECTIONS */
-    .section { padding: 4rem 2rem; max-width: 760px; margin: 0 auto; }
-    .section + .section { border-top: 1px solid var(--border); }
+    /* ── WRAPPER ── */
+    .page { position: relative; z-index: 1; }
 
-    /* HERO */
-    .hero { padding: 4.5rem 2rem 3rem; max-width: 760px; margin: 0 auto; }
-    .hero-inner { display: flex; gap: 2rem; align-items: flex-start; }
-    .avatar {
-      width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
-      background: var(--ocean-light);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 600; color: var(--ocean);
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 2.5rem 5rem;
+      position: relative;
+    }
+    .hero-content { max-width: 680px; }
+
+    .eyebrow {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--foam);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1.2rem;
+      opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+    }
+    .eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1px; background: var(--foam);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 400; line-height: 1.1;
+      color: var(--white);
       letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+      opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
     }
-    .hero-text h1 { font-size: 26px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; letter-spacing: -0.02em; }
-    .hero-text .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
-    .hero-text p { font-size: 14px; color: #374151; line-height: 1.75; max-width: 520px; font-family: 'Lora', serif; font-style: italic; }
-    .tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero h1 em {
+      font-style: italic; color: var(--ice);
+    }
+
+    .hero-sub {
+      font-size: 15px; color: var(--muted);
+      margin: 1.2rem 0 2rem;
+      max-width: 480px; line-height: 1.75;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      opacity: 0; animation: fadeUp 0.8s 0.7s forwards;
+    }
+
+    .hero-meta {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.8s 0.9s forwards;
+    }
+    .hero-meta-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--foam);
+    }
+    .hero-meta-item svg { opacity: 0.7; flex-shrink: 0; }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex; gap: 12px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.8s 1.1s forwards;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.03em;
+      padding: 11px 22px; border-radius: 4px;
+      text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--foam); color: var(--deep);
+    }
+    .btn-primary:hover { background: var(--ice); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(168,220,232,0.3);
+      color: var(--ice);
+    }
+    .btn-outline:hover { border-color: var(--foam); background: rgba(91,168,196,0.08); }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute; bottom: 2rem; right: 2.5rem;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); opacity: 0; animation: fadeIn 1s 1.5s forwards;
+    }
+    .scroll-line {
+      width: 1px; height: 40px; background: var(--border);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute;
+      top: -100%; left: 0; width: 100%; height: 100%;
+      background: var(--foam);
+      animation: scrollDrop 1.8s 1.8s infinite;
+    }
+
+    /* ── SECTION BASE ── */
+    .section {
+      max-width: 760px; margin: 0 auto;
+      padding: 5rem 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--foam); margin-bottom: 2.5rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .about-grid p {
+      font-size: 14px; color: rgba(168,220,232,0.8);
+      line-height: 1.8; font-family: 'Playfair Display', serif;
+    }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
     .tag {
       font-size: 11px; font-weight: 500;
-      background: var(--ocean-light); color: var(--ocean);
-      padding: 4px 12px; border-radius: 20px;
-    }
-    .hero-links { margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
-    .hero-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 13px; font-weight: 500; color: var(--text);
-      border: 1px solid var(--border); border-radius: 6px;
-      padding: 7px 14px; text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .hero-link:hover { background: var(--bg2); border-color: #d1d5db; }
-    .hero-link.primary { background: var(--ocean); color: #fff; border-color: var(--ocean); }
-    .hero-link.primary:hover { background: #0a5942; border-color: #0a5942; }
-
-    /* SECTION LABELS */
-    .section-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--ocean);
-      margin-bottom: 1.5rem;
+      padding: 5px 13px; border-radius: 2px;
+      background: rgba(91,168,196,0.1);
+      border: 1px solid rgba(91,168,196,0.25);
+      color: var(--foam);
     }
 
-    /* TIMELINE */
-    .timeline { display: flex; flex-direction: column; gap: 0; }
-    .titem { display: grid; grid-template-columns: 110px 1fr; gap: 0 1.5rem; position: relative; padding-bottom: 1.8rem; }
-    .titem:last-child { padding-bottom: 0; }
-    .titem::before {
+    /* ── TIMELINE ── */
+    .timeline { position: relative; }
+    .timeline::before {
       content: ''; position: absolute;
-      left: 109px; top: 8px; bottom: 0;
+      left: 0; top: 6px; bottom: 0;
       width: 1px; background: var(--border);
     }
-    .titem:last-child::before { display: none; }
-    .tdate { font-size: 12px; color: var(--muted); padding-top: 1px; text-align: right; }
-    .tright { padding-left: 1rem; position: relative; }
-    .tright::before {
+    .titem {
+      padding: 0 0 2.5rem 2rem;
+      position: relative;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .titem.visible { opacity: 1; transform: translateY(0); }
+    .titem::before {
       content: ''; position: absolute;
-      left: -5px; top: 7px;
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--ocean); border: 2px solid var(--bg);
-      outline: 1px solid var(--ocean);
+      left: -4px; top: 6px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--foam);
     }
-    .tright h3 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .tright .org { font-size: 13px; color: var(--ocean); margin-bottom: 6px; }
-    .tright p { font-size: 13px; color: #4b5563; line-height: 1.65; }
+    .tdate {
+      font-size: 11px; color: var(--foam);
+      letter-spacing: 0.06em; margin-bottom: 4px;
+    }
+    .titem h3 { font-size: 15px; font-weight: 500; color: var(--white); margin-bottom: 2px; }
+    .torg { font-size: 13px; color: var(--foam); margin-bottom: 8px; font-style: italic; }
+    .titem p { font-size: 13px; color: var(--muted); line-height: 1.7; }
 
-    /* PUBLICATIONS */
-    .pub-list { display: flex; flex-direction: column; gap: 12px; }
+    /* ── PUBLICATIONS ── */
+    .pub-list { display: flex; flex-direction: column; gap: 16px; }
     .pub {
-      padding: 1.1rem 1.25rem;
-      border: 1px solid var(--border); border-radius: 10px;
-      background: var(--bg);
-      transition: border-color 0.15s;
+      padding: 1.4rem 1.6rem;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: rgba(13,74,110,0.18);
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.5s, transform 0.5s, border-color 0.2s;
     }
-    .pub:hover { border-color: var(--ocean-mid); }
-    .pub-status {
-      display: inline-block; font-size: 10px; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      background: #FEF3C7; color: #92400E;
-      padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;
+    .pub.visible { opacity: 1; transform: translateY(0); }
+    .pub:hover {
+      border-color: rgba(91,168,196,0.4);
+      background: rgba(13,74,110,0.3);
     }
-    .pub h3 { font-size: 14px; font-weight: 500; line-height: 1.5; margin-bottom: 5px; }
-    .pub .pub-meta { font-size: 12px; color: var(--muted); }
-    .pub .pub-journal { font-size: 12px; color: var(--ocean); margin-top: 4px; font-style: italic; }
+    .pub::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--foam);
+    }
+    .pub-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      background: rgba(232,201,106,0.12);
+      border: 1px solid rgba(232,201,106,0.3);
+      color: var(--gold); padding: 3px 10px; border-radius: 2px;
+      margin-bottom: 10px;
+    }
+    .pub h3 { font-size: 14px; font-weight: 400; color: var(--white); line-height: 1.55; margin-bottom: 8px; }
+    .pub-meta { font-size: 12px; color: var(--muted); }
+    .pub-journal { font-size: 12px; color: var(--foam); margin-top: 4px; font-style: italic; }
 
-    /* SKILLS */
+    /* ── SKILLS ── */
     .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
     .skill-card {
-      padding: 1rem 1.1rem;
-      border: 1px solid var(--border); border-radius: 10px;
-      background: var(--bg2);
+      padding: 1.2rem 1.3rem;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: rgba(4,24,42,0.6);
+      transition: border-color 0.2s;
     }
-    .skill-card h4 { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-    .skill-card p { font-size: 13px; color: var(--text); line-height: 1.6; }
+    .skill-card:hover { border-color: rgba(91,168,196,0.35); }
+    .skill-card h4 {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--foam); margin-bottom: 8px;
+    }
+    .skill-card p { font-size: 13px; color: rgba(168,220,232,0.7); line-height: 1.6; }
 
-    /* CONTACT */
+    /* ── CONTACT ── */
     .contact-grid { display: flex; gap: 10px; flex-wrap: wrap; }
     .contact-item {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 13px; color: var(--text);
-      border: 1px solid var(--border); border-radius: 8px;
-      padding: 10px 16px; text-decoration: none;
-      transition: background 0.15s;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--pale);
+      border: 1px solid var(--border); border-radius: 5px;
+      padding: 11px 18px; text-decoration: none;
+      background: rgba(4,24,42,0.5);
+      transition: background 0.2s, border-color 0.2s;
     }
-    .contact-item:hover { background: var(--bg2); }
-    .contact-item svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+    .contact-item:hover { background: rgba(91,168,196,0.1); border-color: rgba(91,168,196,0.4); }
+    .contact-item svg { color: var(--foam); flex-shrink: 0; }
+    .referees { margin-top: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .referee {
+      padding: 1.1rem 1.3rem;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: rgba(4,24,42,0.5);
+    }
+    .referee h4 { font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 3px; }
+    .referee p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .referee a { color: var(--foam); text-decoration: none; font-size: 12px; }
+    .referee a:hover { text-decoration: underline; }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer {
-      text-align: center; padding: 2rem;
-      font-size: 12px; color: var(--muted);
+      text-align: center; padding: 2.5rem;
+      font-size: 11px; color: var(--muted);
       border-top: 1px solid var(--border);
     }
 
-    @media (max-width: 600px) {
-      nav { padding: 0 1rem; }
-      .nav-links { gap: 1rem; }
-      .hero, .section { padding-left: 1.2rem; padding-right: 1.2rem; }
-      .hero-inner { flex-direction: column; gap: 1rem; }
-      .titem { grid-template-columns: 80px 1fr; }
-      .titem::before { left: 79px; }
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes scrollDrop {
+      0%   { top: -100%; }
+      100% { top: 100%; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1.2rem; }
+      .nav-links { gap: 1.2rem; }
+      .hero { padding: 0 1.2rem 4rem; }
+      .section { padding: 3.5rem 1.2rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .referees { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="#">Janki Kanzariya</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+<!-- OCEAN CURRENT ANIMATION -->
+<canvas id="ocean-canvas"></canvas>
 
-<!-- HERO -->
-<div class="hero" id="about">
-  <div class="hero-inner">
-    <div class="avatar">JK</div>
-    <div class="hero-text">
-      <h1>Janki Kanzariya</h1>
-      <div class="subtitle">Project Associate · Indian Institute of Science, Bengaluru</div>
-      <p>My research focuses on ocean dynamics and large-scale circulation processes that regulate climate variability — including mixed-layer processes, ocean heat fluxes, polar sea-ice variability, and their role in driving regional sea-level change.</p>
-      <div class="tags">
-        <span class="tag">Ocean Dynamics</span>
-        <span class="tag">Polar Oceanography</span>
-        <span class="tag">Sea-Ice Variability</span>
-        <span class="tag">Climate Science</span>
-        <span class="tag">Southern Ocean</span>
+<div class="page">
+  <nav>
+    <a class="nav-logo" href="#">Janki Kanzariya</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">Ocean Dynamics · Physical Oceanography</div>
+      <h1>Janki<br><em>Kanzariya</em></h1>
+      <p class="hero-sub">
+        Studying the physics of polar oceans — how sea ice, heat fluxes, and deep circulation
+        shape our climate and drive sea-level change across the Southern Ocean.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Indian Institute of Science, Bengaluru
+        </div>
+        <div class="hero-meta-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Project Associate · Sep 2025 – Present
+        </div>
       </div>
-      <div class="hero-links">
-        <a href="mailto:janki2472@gmail.com" class="hero-link primary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Email me
-        </a>
-        <a href="https://linkedin.com/in/jankikanzariya" target="_blank" class="hero-link">
-          <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
+      <div class="hero-cta">
+        <a href="mailto:janki2472@gmail.com" class="btn btn-primary">Get in Touch</a>
+        <a href="#publications" class="btn btn-outline">View Publications</a>
       </div>
     </div>
-  </div>
-</div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
 
-<!-- EXPERIENCE -->
-<div class="section" id="experience">
-  <div class="section-label">Research Experience</div>
-  <div class="timeline">
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-label">About</div>
+    <div class="about-grid">
+      <div>
+        <p>My research focuses on understanding ocean dynamics and large-scale circulation processes that regulate climate variability. I am particularly interested in mixed-layer processes, ocean heat fluxes, and their role in driving regional and seasonal sea-level change.</p>
+      </div>
+      <div>
+        <p>I aim to advance understanding of polar ocean physics, including sea-ice variability and its influence on stratification, circulation, and global climate interactions — combining satellite observations, model simulations, and field data.</p>
+      </div>
+    </div>
+    <div class="about-tags">
+      <span class="tag">Ocean Dynamics</span>
+      <span class="tag">Polar Oceanography</span>
+      <span class="tag">Sea-Ice Variability</span>
+      <span class="tag">Southern Ocean</span>
+      <span class="tag">Mixed-Layer Physics</span>
+      <span class="tag">Sea-Level Change</span>
+      <span class="tag">Climate Variability</span>
+      <span class="tag">Remote Sensing</span>
+    </div>
+  </section>
 
-    <div class="titem">
-      <div class="tdate">Sep 2025 – Present</div>
-      <div class="tright">
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="section-label">Research Experience</div>
+    <div class="timeline">
+
+      <div class="titem">
+        <div class="tdate">Sep 2025 – Present</div>
         <h3>Project Associate</h3>
-        <div class="org">Indian Institute of Science (IISc), Bengaluru</div>
+        <div class="torg">Indian Institute of Science (IISc), Bengaluru</div>
         <p>Investigating regional sea-level variability in the Southern Ocean, focusing on temperature and salinity contributions to density-driven changes and sea-level rise due to sea-ice melting.</p>
       </div>
-    </div>
 
-    <div class="titem">
-      <div class="tdate">Jun 2024 – May 2025</div>
-      <div class="tright">
+      <div class="titem">
+        <div class="tdate">Jun 2024 – May 2025</div>
         <h3>Master's Thesis Researcher</h3>
-        <div class="org">National Centre for Polar and Ocean Research (NCPOR), Goa</div>
-        <p>Analysed Antarctic sea surface temperature and sea-ice variability (2005–2023). Quantified atmospheric heat flux components in mixed-layer warming using filtering, regression, and anomaly computation. Conducted model–data comparisons using AVHRR and MOM5.</p>
+        <div class="torg">National Centre for Polar and Ocean Research (NCPOR), Goa</div>
+        <p>Analysed Antarctic sea surface temperature and sea-ice variability (2005–2023). Quantified atmospheric heat flux components in mixed-layer warming using filtering, regression, and anomaly computation. Conducted model–data comparisons using AVHRR observations and MOM5 output.</p>
       </div>
-    </div>
 
-    <div class="titem">
-      <div class="tdate">Dec 2023 – May 2024</div>
-      <div class="tright">
+      <div class="titem">
+        <div class="tdate">Dec 2023 – May 2024</div>
         <h3>Research Intern</h3>
-        <div class="org">NCPOR, Goa</div>
+        <div class="torg">NCPOR, Goa</div>
         <p>Processed a 12-year AVHRR dataset to study Antarctic sea-ice variability. Performed regional comparisons with MOM5 simulations across Southern Ocean sectors.</p>
       </div>
-    </div>
 
-    <div class="titem">
-      <div class="tdate">Summer 2023</div>
-      <div class="tright">
+      <div class="titem">
+        <div class="tdate">Summer 2023</div>
         <h3>Research Intern</h3>
-        <div class="org">Charotar University of Science and Technology, Gujarat</div>
-        <p>Literature-based study on dark matter and gravitational lensing, focusing on theoretical foundations and observational implications.</p>
+        <div class="torg">Charotar University of Science and Technology, Gujarat</div>
+        <p>Literature study on dark matter and gravitational lensing, focusing on theoretical foundations and observational implications.</p>
       </div>
-    </div>
 
-    <div class="titem">
-      <div class="tdate">Jul 2022 – May 2023</div>
-      <div class="tright">
+      <div class="titem">
+        <div class="tdate">Jul 2022 – May 2023</div>
         <h3>Mini Project: Coral Bleaching & SST Analysis</h3>
-        <div class="org">SVNIT, Surat</div>
-        <p>Analysed ten years of sea surface temperature data from NOAA ERDDAP to investigate coral bleaching in the Andaman and Nicobar Islands. Visualised SST anomalies during extreme warming years.</p>
+        <div class="torg">SVNIT, Surat</div>
+        <p>Analysed ten years of sea surface temperature data from NOAA ERDDAP to investigate coral bleaching in the Andaman and Nicobar Islands. Visualised SST anomalies and assessed warming during extreme years.</p>
       </div>
+
     </div>
 
-  </div>
-</div>
-
-<!-- EDUCATION -->
-<div class="section" id="education">
-  <div class="section-label">Education</div>
-  <div class="timeline">
-    <div class="titem">
-      <div class="tdate">2020 – 2025</div>
-      <div class="tright">
+    <div class="section-label" style="margin-top:3rem;">Education</div>
+    <div class="timeline">
+      <div class="titem">
+        <div class="tdate">2020 – 2025</div>
         <h3>M.Sc. Applied Physics</h3>
-        <div class="org">Sardar Vallabhbhai National Institute of Technology (SVNIT), Surat</div>
+        <div class="torg">Sardar Vallabhbhai National Institute of Technology (SVNIT), Surat</div>
         <p>CGPA: 8.24 / 10</p>
       </div>
-    </div>
-    <div class="titem">
-      <div class="tdate">2018 – 2020</div>
-      <div class="tright">
+      <div class="titem">
+        <div class="tdate">2018 – 2020</div>
         <h3>Higher Secondary Education (12th)</h3>
-        <div class="org">Vidhyut Board Vidhyalaya School, Gujarat</div>
+        <div class="torg">Vidhyut Board Vidhyalaya School, Gujarat</div>
         <p>93.8%</p>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section class="section" id="publications">
+    <div class="section-label">Publications</div>
+    <div class="pub-list">
+
+      <div class="pub">
+        <div class="pub-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Under Review
+        </div>
+        <h3>Trends in Sea Surface Temperature and Sea Ice in the Antarctic Sector of the Southern Ocean (2005–2014 &amp; 2015–2023)</h3>
+        <div class="pub-meta">Kanzariya, J., &amp; Mukherjee, A.</div>
+        <div class="pub-journal">Dynamics of Atmospheres and Oceans</div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Under Review
+        </div>
+        <h3>Impact of Atmospheric Heat Fluxes on Sea Surface Temperature Warming During Austral Summer in the Antarctic (2015–2022)</h3>
+        <div class="pub-meta">Kanzariya, J., &amp; Mukherjee, A.</div>
+        <div class="pub-journal">Climate Dynamics</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="section-label">Technical Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4>Programming</h4>
+        <p>Python, C</p>
+      </div>
+      <div class="skill-card">
+        <h4>Data Analysis</h4>
+        <p>netCDF handling, FFT, filtering techniques, Cartopy, Astropy</p>
+      </div>
+      <div class="skill-card">
+        <h4>Software</h4>
+        <p>MATLAB, Octave, Mathematica, ArcGIS</p>
+      </div>
+      <div class="skill-card">
+        <h4>Research Expertise</h4>
+        <p>Climate data analysis, Polar climate dynamics, Sea-ice variability</p>
+      </div>
+      <div class="skill-card">
+        <h4>Operating Systems</h4>
+        <p>Windows, Linux</p>
+      </div>
+      <div class="skill-card">
+        <h4>Trainings &amp; Workshops</h4>
+        <p>Ocean Data Management 2025 (UN Decade of Ocean Science), Astronomical Python (IIT Bombay), Raman Spectroscopy (ISRO)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="section-label">Contact</div>
+    <div class="contact-grid">
+      <a href="mailto:janki2472@gmail.com" class="contact-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        janki2472@gmail.com
+      </a>
+      <a href="tel:+918320772321" class="contact-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +91 83207 72321
+      </a>
+      <a href="https://linkedin.com/in/jankikanzariya" target="_blank" class="contact-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        linkedin.com/in/jankikanzariya
+      </a>
+    </div>
+
+    <div class="referees">
+      <div class="referee">
+        <h4>Dr. Bhishakha Datta Gayen</h4>
+        <p>Assistant Professor<br>Centre for Atmospheric and Oceanic Sciences<br>Indian Institute of Science, Bengaluru</p>
+        <a href="mailto:bgayen@iisc.ac.in">bgayen@iisc.ac.in</a>
+      </div>
+      <div class="referee">
+        <h4>Dr. Arnab Mukherjee</h4>
+        <p>Scientist E<br>National Centre for Polar and Ocean Research (NCPOR)<br>Ministry of Earth Sciences, Goa</p>
+        <a href="mailto:arnab@ncpor.res.in">arnab@ncpor.res.in</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Janki Kanzariya · Ocean Dynamics Researcher · IISc Bengaluru
+  </footer>
 </div>
 
-<!-- PUBLICATIONS -->
-<div class="section" id="publications">
-  <div class="section-label">Publications</div>
-  <div class="pub-list">
+<script>
+// ── OCEAN CURRENT PARTICLE ANIMATION ──
+const canvas = document.getElementById('ocean-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], animId;
 
-    <div class="pub">
-      <span class="pub-status">Under Review</span>
-      <h3>Trends in Sea Surface Temperature and Sea Ice in the Antarctic Sector of the Southern Ocean (2005–2014 &amp; 2015–2023)</h3>
-      <div class="pub-meta">Kanzariya, J., &amp; Mukherjee, A.</div>
-      <div class="pub-journal">Dynamics of Atmospheres and Oceans</div>
-    </div>
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
 
-    <div class="pub">
-      <span class="pub-status">Under Review</span>
-      <h3>Impact of Atmospheric Heat Fluxes on Sea Surface Temperature Warming During Austral Summer in the Antarctic (2015–2022)</h3>
-      <div class="pub-meta">Kanzariya, J., &amp; Mukherjee, A.</div>
-      <div class="pub-journal">Climate Dynamics</div>
-    </div>
+// Flow field using Perlin-like noise via simplex approximation
+function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+function lerp(a, b, t) { return a + t * (b - a); }
+function grad(hash, x, y) {
+  const h = hash & 3;
+  const u = h < 2 ? x : y, v = h < 2 ? y : x;
+  return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+}
+const perm = new Uint8Array(512);
+for (let i = 0; i < 256; i++) perm[i] = i;
+for (let i = 255; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [perm[i], perm[j]] = [perm[j], perm[i]];
+}
+for (let i = 0; i < 256; i++) perm[i + 256] = perm[i];
 
-  </div>
-</div>
+function noise2d(x, y) {
+  const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+  x -= Math.floor(x); y -= Math.floor(y);
+  const u = fade(x), v = fade(y);
+  const a = perm[X] + Y, b = perm[X + 1] + Y;
+  return lerp(
+    lerp(grad(perm[a], x, y), grad(perm[b], x - 1, y), u),
+    lerp(grad(perm[a + 1], x, y - 1), grad(perm[b + 1], x - 1, y - 1), u),
+    v
+  );
+}
 
-<!-- SKILLS -->
-<div class="section" id="skills">
-  <div class="section-label">Technical Skills</div>
-  <div class="skills-grid">
-    <div class="skill-card">
-      <h4>Programming</h4>
-      <p>Python, C</p>
-    </div>
-    <div class="skill-card">
-      <h4>Data Analysis</h4>
-      <p>netCDF handling, FFT, filtering techniques, Cartopy, Astropy</p>
-    </div>
-    <div class="skill-card">
-      <h4>Software</h4>
-      <p>MATLAB, Octave, Mathematica, ArcGIS</p>
-    </div>
-    <div class="skill-card">
-      <h4>Research Expertise</h4>
-      <p>Climate data analysis, Polar climate dynamics, Sea-ice variability</p>
-    </div>
-    <div class="skill-card">
-      <h4>Operating Systems</h4>
-      <p>Windows, Linux</p>
-    </div>
-    <div class="skill-card">
-      <h4>Trainings</h4>
-      <p>Ocean Data Management 2025, Astronomical Calculations with Python, Raman Spectroscopy (ISRO)</p>
-    </div>
-  </div>
-</div>
+function flowAngle(x, y, t) {
+  const scale = 0.0018;
+  return noise2d(x * scale + t * 0.12, y * scale + t * 0.08) * Math.PI * 3;
+}
 
-<!-- CONTACT -->
-<div class="section" id="contact">
-  <div class="section-label">Contact</div>
-  <div class="contact-grid">
-    <a href="mailto:janki2472@gmail.com" class="contact-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      janki2472@gmail.com
-    </a>
-    <a href="tel:+918320772321" class="contact-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      +91 83207 72321
-    </a>
-    <a href="https://linkedin.com/in/jankikanzariya" target="_blank" class="contact-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-      linkedin.com/in/jankikanzariya
-    </a>
-  </div>
-  <p style="margin-top:1.5rem; font-size:13px; color:#6b7280;">
-    Supervised by <strong>Dr. Bhishakha Datta Gayen</strong> (IISc) and <strong>Dr. Arnab Mukherjee</strong> (NCPOR).
-  </p>
-</div>
+// Color palette: deep teal → ice blue
+const COLORS = [
+  'rgba(13, 78, 110, ',
+  'rgba(14, 116, 144, ',
+  'rgba(91, 168, 196, ',
+  'rgba(125, 211, 232, ',
+  'rgba(168, 220, 232, ',
+];
 
-<footer>
-  © 2025 Janki Kanzariya · Ocean Dynamics Researcher
-</footer>
+class Particle {
+  constructor() { this.reset(true); }
+  reset(random) {
+    this.x = random ? Math.random() * W : (Math.random() < 0.5 ? Math.random() * 80 : W - Math.random() * 80);
+    this.y = random ? Math.random() * H : Math.random() * H;
+    this.speed = 0.4 + Math.random() * 1.0;
+    this.life = 0;
+    this.maxLife = 120 + Math.random() * 280;
+    this.size = 0.8 + Math.random() * 1.4;
+    this.colorIdx = Math.floor(Math.random() * COLORS.length);
+    this.trail = [];
+    this.trailLen = Math.floor(4 + Math.random() * 8);
+  }
+  update(t) {
+    const angle = flowAngle(this.x, this.y, t);
+    // Bias: push particles generally eastward (like ACC)
+    const bias = noise2d(this.x * 0.001, this.y * 0.001 + t * 0.03) * 0.6;
+    this.vx = Math.cos(angle + bias) * this.speed;
+    this.vy = Math.sin(angle) * this.speed * 0.55;
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > this.trailLen) this.trail.shift();
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life++;
+    if (this.life > this.maxLife || this.x < -5 || this.x > W + 5 || this.y < -5 || this.y > H + 5) {
+      this.reset(false);
+    }
+  }
+  draw() {
+    if (this.trail.length < 2) return;
+    const progress = this.life / this.maxLife;
+    const alpha = Math.sin(progress * Math.PI) * 0.55;
+    ctx.beginPath();
+    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+    for (let i = 1; i < this.trail.length; i++) {
+      ctx.lineTo(this.trail[i].x, this.trail[i].y);
+    }
+    ctx.strokeStyle = COLORS[this.colorIdx] + alpha + ')';
+    ctx.lineWidth = this.size;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+}
 
+const N = 900;
+for (let i = 0; i < N; i++) particles.push(new Particle());
+
+let t = 0;
+function animate() {
+  animId = requestAnimationFrame(animate);
+  ctx.fillStyle = 'rgba(2, 13, 24, 0.08)';
+  ctx.fillRect(0, 0, W, H);
+  t += 0.004;
+  for (const p of particles) {
+    p.update(t);
+    p.draw();
+  }
+}
+animate();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.titem, .pub').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
